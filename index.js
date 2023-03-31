@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
 const db = require('cyclic-dynamodb')
+const request = require('request');
+
+const apiKey = Buffer.from(process.config.API_KEY, 'base64');
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -62,6 +66,7 @@ app.get('/:col', async (req, res) => {
 
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
+  callAPI(options)
   res.json({ msg: 'no route handler found' }).end()
 })
 
@@ -70,3 +75,23 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`index.js listening on ${port}`)
 })
+
+const options = {
+  url: 'https://api.godaddy.com/v1/appraisal/tech-meet.com',
+  method: 'GET',
+  headers: {
+    'Authorization': `sso-key ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+  }
+};
+
+function callAPI(options){
+  request(options, (error, response, body="") => {
+    if (!error && response.statusCode === 200) {
+      console.log(body);
+    } else {
+      console.log(error);
+    }
+  });
+}
