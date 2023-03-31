@@ -3,7 +3,7 @@ const app = express()
 const db = require('cyclic-dynamodb')
 const request = require('request');
 
-const apiKey = Buffer.from(process.config.API_KEY, 'base64');
+const apiKey = Buffer.from(process.config.API_KEY, 'base64').toString('utf-8');
 
 
 app.use(express.json())
