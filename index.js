@@ -2,8 +2,9 @@ const express = require('express')
 const app = express()
 const db = require('cyclic-dynamodb')
 const request = require('request');
-
-const apiKey = Buffer.from(process.env.API_KEY, 'base64').toString('utf-8');
+console.log("API Key - "+process.env)
+console.log("API Key - "+process.env.API_KEY)
+const apiKey = process.env.API_KEY
 
 
 app.use(express.json())
