@@ -87,27 +87,29 @@ let options = {
   }
 };
 function findAllStringCombinations(strList) {
-  function generateCombinations(idx, currCombination) {
-    if (idx === strList.length) {
-      callAPI(currCombination+'.com'); // Invoke callAPI for each combination found
-      return;
+  const combinations = [''];
+  for (let i = 0; i < strList.length; i++) {
+    const str = strList[i];
+    const newCombinations = [];
+    for (let j = 0; j < combinations.length; j++) {
+      const currCombination = combinations[j];
+      for (let k = 0; k < str.length; k++) {
+        const newCombination = currCombination + str.charAt(k);
+        newCombinations.push(newCombination);
+      }
     }
-
-    const str = strList[idx];
-    for (let i = 0; i < str.length; i++) {
-      const newCombination = currCombination + str.charAt(i);
-      generateCombinations(idx + 1, newCombination);
-    }
+    combinations.push(...newCombinations);
   }
-
-  generateCombinations(0, '');
+  combinations.shift(); // remove the empty string from the beginning of the array
+  for (let i = 0; i < combinations.length; i++) {
+    callAPI(combinations[i]);
+  }
 }
 
 function callAPI(options,domainName){
   options.url = `https://api.godaddy.com/v1/appraisal/${domainName}`
   request(options, (error, response, body="") => {
     if (!error && response.statusCode === 200) {
-
         if ('govalue' in response) {
           const price = parseInt(response['govalue']);
           domin_price_logger.info(`Price for ${domainName}: ${price}`);
