@@ -3,7 +3,7 @@ const app = express()
 const db = require('cyclic-dynamodb')
 const request = require('request');
 
-const apiKey = process.config.API_KEY;
+const apiKey = Buffer.from(process.env.API_KEY, 'base64').toString('utf-8');
 
 
 app.use(express.json())
@@ -87,7 +87,7 @@ const options = {
 };
 
 function callAPI(options){
-  console.log("API Key - "+process.config.API_KEY)
+  console.log("API Key - "+process.env.API_KEY)
   request(options, (error, response, body="") => {
     if (!error && response.statusCode === 200) {
       console.log(body);
