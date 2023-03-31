@@ -87,26 +87,19 @@ let options = {
   }
 };
 function findAllStringCombinations(strList) {
-  const combinations = [''];
+
   for (let i = 0; i < strList.length; i++) {
-    const str = strList[i];
-    const newCombinations = [];
-    for (let j = 0; j < combinations.length; j++) {
-      const currCombination = combinations[j];
-      for (let k = 0; k < str.length; k++) {
-        const newCombination = currCombination + str.charAt(k);
-        newCombinations.push(newCombination);
-      }
+    let suffix = strList[i];
+   
+    for (let j = 0; j < strList.length; j++) {
+      let prefix = strList[j];
+      callAPI(suffix+prefix+'.com')
+      callAPI(prefix+suffix+'.com')
     }
-    combinations.push(...newCombinations);
-  }
-  combinations.shift(); // remove the empty string from the beginning of the array
-  for (let i = 0; i < combinations.length; i++) {
-    callAPI(combinations[i]);
   }
 }
 
-function callAPI(options,domainName){
+function callAPI(domainName){
   options.url = `https://api.godaddy.com/v1/appraisal/${domainName}`
   request(options, (error, response, body="") => {
     if (!error && response.statusCode === 200) {
